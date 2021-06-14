@@ -17,7 +17,7 @@ public class Tile extends JPanel{
         // declares the position of the tile 
         position = a;
         this.setPreferredSize(new Dimension(tileSize, tileSize));
-        this.setBounds(x, y, tileSize, tileSize);
+        this.setBounds(x + 50, y + 50, tileSize, tileSize);
         if((x + y) % 2 == 0) { 
             this.setBackground(new Color(rgbWhite[0], rgbWhite[1], rgbWhite[2]));
         }
