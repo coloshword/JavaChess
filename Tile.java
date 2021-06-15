@@ -1,7 +1,9 @@
-import javax.swing.*;
 import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
 
-public class Tile extends JPanel{
+
+public class Tile extends JPanel implements ActionListener{
     // each tile on the chessboard will be a JPanel
     // each tile has 3 positions denoted by an integer
     // 1 is white, 2 is black, 3 is empty
@@ -11,6 +13,10 @@ public class Tile extends JPanel{
     // int x and y correspond to the coordinates, int a to the position
     // the 2d array to keep positions
     char[][] boardInfo = new char[8][8];
+    static int delay = 75;
+    boolean running = false;
+    Timer timer;
+
     public Tile(int a, int x, int y) {
         // rgbs of the two colors:
         // white
@@ -56,5 +62,19 @@ public class Tile extends JPanel{
             boardInfo[1][i] = 'P';
         }
     }
+
+    public void startGame() {
+        running = true;
+        timer = new Timer(delay, this);
+        timer.start();
+    }
     
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if(running) {
+
+        }
+        repaint();
+    }
+
 }
