@@ -44,8 +44,8 @@ public class Tile extends JPanel implements ActionListener{
                 nameModifier = "b";
             }
             try {
-                System.out.println(nameModifier + boardInfo[row][column]);
-                BufferedImage image = ImageIO.read(new File(nameModifier + boardInfo[row][column]));
+                System.out.println(nameModifier + boardInfo[row][column] + ".png");
+                BufferedImage image = ImageIO.read(new File(nameModifier + boardInfo[row][column] + ".png"));
                 JLabel label = new JLabel(new ImageIcon(image));
                 this.add(label);
             } catch (IOException ex) {
@@ -94,7 +94,7 @@ public class Tile extends JPanel implements ActionListener{
         boardInfo[7][6] = 'K';
         boardInfo[7][7] = 'R';
         for(int i = 0; i < 8; i++) {
-            boardInfo[1][i] = 'P';
+            boardInfo[6][i] = 'P';
         }
     }
 
