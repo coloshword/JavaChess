@@ -1,7 +1,11 @@
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
-
+import java.awt.image.BufferedImage;
+import javax.imageio.ImageIO;
+import java.io.File;
+import java.io.IOException;
+import java.awt.Graphics;
 
 public class Tile extends JPanel implements ActionListener{
     // each tile on the chessboard will be a JPanel
@@ -16,8 +20,8 @@ public class Tile extends JPanel implements ActionListener{
     static int delay = 75;
     boolean running = false;
     Timer timer;
-
-    public Tile(int a, int x, int y) {
+    //BufferedImage image; 
+    public Tile(int row, int column, int a, int x, int y) {
         // rgbs of the two colors:
         // white
         int[] rgbWhite = {204, 153, 255};
@@ -34,8 +38,39 @@ public class Tile extends JPanel implements ActionListener{
         }
         this.setFocusable(true);
         this.defineBoardArray();
+        if(position != 3) {
+            String nameModifier = ""; 
+            if(position == 2) {
+                nameModifier = "b";
+            }
+            try {
+                System.out.println(nameModifier + boardInfo[row][column]);
+                BufferedImage image = ImageIO.read(new File(nameModifier + boardInfo[row][column]));
+                JLabel label = new JLabel(new ImageIcon(image));
+                this.add(label);
+            } catch (IOException ex) {
+                System.out.println("Something went wrong");
+            }
+        }
+        // if(position != 3) {
+        //     String nameModifier = ""; 
+        //     if(position == 2) {
+        //         nameModifier = "b";
+        //     }
+        //     try {
+        //         image = ImageIO.read(new File(nameModifier + boardInfo[row][column]));
+        //     } catch (IOException ex) {
+        //         System.out.println("Something went wrong");
+        //     }
+        // }
     }
     
+    public void startGame() {
+        running = true;
+        timer = new Timer(delay, this);
+        timer.start();
+    }
+
     //letter will represent the piece, capital means white, lowercase means black
     public void defineBoardArray() {
         boardInfo[0][0] = 'r';
@@ -63,17 +98,9 @@ public class Tile extends JPanel implements ActionListener{
         }
     }
 
-    public void startGame() {
-        running = true;
-        timer = new Timer(delay, this);
-        timer.start();
-    }
     
     @Override
     public void actionPerformed(ActionEvent e) {
-        if(running) {
-
-        }
         repaint();
     }
 
