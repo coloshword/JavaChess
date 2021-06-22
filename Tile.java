@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.awt.Graphics;
 
 public class Tile extends JPanel implements ActionListener{
+    BufferedImage image;
     // each tile on the chessboard will be a JPanel
     // each tile has 3 positions denoted by an integer
     // 1 is white, 2 is black, 3 is empty
@@ -44,25 +45,17 @@ public class Tile extends JPanel implements ActionListener{
                 nameModifier = "b";
             }
             try {
-                System.out.println(nameModifier + boardInfo[row][column] + ".png");
-                BufferedImage image = ImageIO.read(new File(nameModifier + boardInfo[row][column] + ".png"));
-                JLabel label = new JLabel(new ImageIcon(image));
-                this.add(label);
+                image = ImageIO.read(new File(nameModifier + boardInfo[row][column] + ".png"));
             } catch (IOException ex) {
                 System.out.println("Something went wrong");
             }
         }
-        // if(position != 3) {
-        //     String nameModifier = ""; 
-        //     if(position == 2) {
-        //         nameModifier = "b";
-        //     }
-        //     try {
-        //         image = ImageIO.read(new File(nameModifier + boardInfo[row][column]));
-        //     } catch (IOException ex) {
-        //         System.out.println("Something went wrong");
-        //     }
-        // }
+    }
+
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        g.drawImage(image, 10, 10, this);
     }
     
     public void startGame() {
@@ -77,7 +70,7 @@ public class Tile extends JPanel implements ActionListener{
         boardInfo[0][1] = 'k';
         boardInfo[0][2] = 'b';
         boardInfo[0][3] = 'q';
-        boardInfo[0][4] = 'k';
+        boardInfo[0][4] = '=';
         boardInfo[0][5] = 'b';
         boardInfo[0][6] = 'k';
         boardInfo[0][7] = 'r';
@@ -89,7 +82,7 @@ public class Tile extends JPanel implements ActionListener{
         boardInfo[7][1] = 'K';
         boardInfo[7][2] = 'B';
         boardInfo[7][3] = 'Q';
-        boardInfo[7][4] = 'K';
+        boardInfo[7][4] = '+';
         boardInfo[7][5] = 'B';
         boardInfo[7][6] = 'K';
         boardInfo[7][7] = 'R';
