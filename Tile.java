@@ -7,7 +7,7 @@ import java.io.File;
 import java.io.IOException;
 import java.awt.Graphics;
 
-public class Tile extends JPanel implements ActionListener{
+public class Tile extends JPanel implements ActionListener, MouseListener{
     BufferedImage image;
     // each tile on the chessboard will be a JPanel
     // each tile has 3 positions denoted by an integer
@@ -31,6 +31,8 @@ public class Tile extends JPanel implements ActionListener{
         position = a;
         this.setPreferredSize(new Dimension(tileSize, tileSize));
         this.setBounds(x + 50, y + 50, tileSize, tileSize);
+        // all Tiles have a mouse listener
+        this.addMouseListener(this);
         if((x + y) % 2 == 0) { 
             this.setBackground(new Color(rgbWhite[0], rgbWhite[1], rgbWhite[2]));
         }
@@ -51,6 +53,34 @@ public class Tile extends JPanel implements ActionListener{
             }
         }
     }
+    
+    // corresponding mouse clicked events
+    @Override
+    public void mouseClicked(MouseEvent e) {
+        System.out.println("clicked");
+    }
+    
+    @Override
+    public void mousePressed(MouseEvent e) {
+        System.out.println("pressed");
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
+        System.out.println("Released");
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent e) {
+        System.out.println("Entered");
+    }
+
+    @Override
+    public void mouseExited(MouseEvent e) {
+        System.out.println("Exited");
+    }
+
+    // Painting the image sprites
 
     @Override
     protected void paintComponent(Graphics g) {
@@ -91,7 +121,7 @@ public class Tile extends JPanel implements ActionListener{
         }
     }
 
-    
+    // corresponding method for actionListener interface 
     @Override
     public void actionPerformed(ActionEvent e) {
         repaint();
