@@ -67,8 +67,10 @@ public class Tile extends JPanel implements MouseListener{
     // corresponding mouse clicked events
     @Override
     public void mouseClicked(MouseEvent e) {
-        lastClicked = this;
-        tileSelection();
+        if(this.position != 3) {
+            lastClicked = this;
+            tileSelection();
+        }
     }
     
     @Override
