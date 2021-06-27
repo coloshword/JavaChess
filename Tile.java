@@ -7,11 +7,11 @@ import java.io.File;
 import java.io.IOException;
 import java.awt.Graphics;
 
-public class Tile extends JPanel implements ActionListener, MouseListener{
+public class Tile extends JPanel implements MouseListener{
     // Color RGBS
-    int[] rgbWhite = {204, 153, 255};
-    int[] rgbPurple = {211,211,211};
-    int[] rgbBlue = {183, 232, 238};
+    static int[] rgbWhite = {204, 153, 255};
+    static int[] rgbPurple = {211,211,211};
+    static int[] rgbBlue = {183, 232, 238};
     // Variable for image to load
     BufferedImage image;
     // each tile on the chessboard will be a JPanel
@@ -27,7 +27,11 @@ public class Tile extends JPanel implements ActionListener, MouseListener{
     boolean running = false;
     Timer timer;
     // has this Tile been clicked by mouseListener
-    boolean clicked;
+    // the last clicked Tile
+    static Tile lastClicked;
+    static Tile blueTile;
+    // instance variables
+    int[] color;
     public Tile(int row, int column, int a, int x, int y) {
         // rgbs of the two colors:
         // white
@@ -37,14 +41,14 @@ public class Tile extends JPanel implements ActionListener, MouseListener{
         this.setBounds(x + 50, y + 50, tileSize, tileSize);
         // all Tiles have a mouse listener
         this.addMouseListener(this);
-        clicked = false;
         // tells us if the Tile has been clicked
         if((x + y) % 2 == 0) { 
-            this.setBackground(new Color(rgbWhite[0], rgbWhite[1], rgbWhite[2]));
+            this.color = rgbWhite;
         }
         else {
-            this.setBackground(new Color(rgbPurple[0], rgbPurple[1], rgbPurple[2]));
+            this.color = rgbPurple;
         }
+        this.setBackground(new Color(this.color[0], this.color[1], this.color[2]));
         this.setFocusable(true);
         this.defineBoardArray();
         if(position != 3) {
@@ -63,8 +67,8 @@ public class Tile extends JPanel implements ActionListener, MouseListener{
     // corresponding mouse clicked events
     @Override
     public void mouseClicked(MouseEvent e) {
-        this.clicked = true;
-        this.changeTileColor(rgbBlue);
+        lastClicked = this;
+        tileSelection();
     }
     
     @Override
@@ -93,16 +97,20 @@ public class Tile extends JPanel implements ActionListener, MouseListener{
     
     public void startGame() {
         running = true;
-        timer = new Timer(delay, this);
+        //timer = new Timer(delay, this);
         timer.start();
     }
 
-    // corresponding method for actionListener interface 
-    @Override
-    public void actionPerformed(ActionEvent e) {
+    public void tileSelection() {
+        // turns clicked tiles blue, and the last clicked Tile turns back to normal color
+        lastClicked.changeTileColor(rgbBlue);
+        // now turn the blueTile to another color
+        if(blueTile != null) {
+            blueTile.changeTileColor(blueTile.color);
+        }
+        blueTile = lastClicked;
     }
 
-    // non interface related methods
     //letter will represent the piece, capital means white, lowercase means black
     public void defineBoardArray() {
         boardInfo[0][0] = 'r';
