@@ -33,11 +33,17 @@ public class Tile extends JPanel implements MouseListener{
     static Tile destinationTile;
     // instance variables
     int[] color;
+    // the horizontal board position (0-7)
+    int row;
+    // the vertical board position (0-7)
+    int column;
     public Tile(int row, int column, int a, int x, int y) {
         // rgbs of the two colors:
         // white
         // declares the position of the tile 
         position = a;
+        this.row = row;
+        this.column = column;
         this.setPreferredSize(new Dimension(tileSize, tileSize));
         this.setBounds(x + 50, y + 50, tileSize, tileSize);
         // all Tiles have a mouse listener
@@ -116,15 +122,31 @@ public class Tile extends JPanel implements MouseListener{
             // then we set lastClicked to the new Tile
             lastClicked = a;        
         }
-        // turns clicked tiles blue, and the last clicked Tile turns back to normal color
-        // lastClicked.changeTileColor(rgbBlue);
-        // // now turn the blueTile to another color
-        // if(blueTile != null) {
-        //     // now if lastC
-        //     blueTile.changeTileColor(blueTile.color);
-        // }
-        // blueTile = lastClicked;
         lastClicked.changeTileColor(rgbBlue);
+        if(a.position == 3) {
+            // this means the last clicked Tile was an empty Tile, meaning we move the Piece
+            movePiece(a, lastClicked);
+            // now print the position to see if it is correct
+            terminalDisplayBoard(boardInfo);
+        }
+    }
+
+    public void movePiece(Tile destTile, Tile startTile) {
+        // moves the start Tile to the destination Tile
+        // the end Tile is not empty
+        destTile.position = startTile.position;
+        // the starting Tile is now empty
+        startTile.position = 3;
+        // swap the values in the boardInfo char array
+        // the value of the destination Tile will be the value of the start Tile
+        boardInfo[destTile.row][destTile.column] = boardInfo[startTile.row][startTile.column];
+        // and the startTile will be empty
+        boardInfo[startTile.row][startTile.column] = '\u0000';
+        // now if successfully moved, both variables should be set to null
+        // before that happens, the startTile color should be shifted back to its original color to indicate it is no longer selected
+        startTile.changeTileColor(startTile.color);
+        destinationTile = null;
+        lastClicked = null;
     }
 
     //letter will represent the piece, capital means white, lowercase means black
