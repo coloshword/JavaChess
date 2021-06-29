@@ -1,6 +1,7 @@
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
+
 import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;
 import java.io.File;
@@ -29,7 +30,7 @@ public class Tile extends JPanel implements MouseListener{
     // has this Tile been clicked by mouseListener
     // the last clicked Tile
     static Tile lastClicked;
-    static Tile blueTile;
+    static Tile destinationTile;
     // instance variables
     int[] color;
     public Tile(int row, int column, int a, int x, int y) {
@@ -67,14 +68,15 @@ public class Tile extends JPanel implements MouseListener{
     // corresponding mouse clicked events
     @Override
     public void mouseClicked(MouseEvent e) {
-        if(this.position != 3) {
-            lastClicked = this;
-            tileSelection();
-        }
     }
     
     @Override
     public void mousePressed(MouseEvent e) {
+        // lastClicked has to be a tile with a piece on it
+        // destinationTile has to be a tile without a piece on it
+        // if lastClicked is a Tile, and the next click is a Tile with a piece, then destinationTile will stay as null, and lastClicked will just switch
+        tileSelection(this);
+        terminalDisplayBoard(boardInfo);
     }
 
     @Override
@@ -100,17 +102,29 @@ public class Tile extends JPanel implements MouseListener{
     public void startGame() {
         running = true;
         //timer = new Timer(delay, this);
-        timer.start();
+        //timer.start();
     }
 
-    public void tileSelection() {
-        // turns clicked tiles blue, and the last clicked Tile turns back to normal color
-        lastClicked.changeTileColor(rgbBlue);
-        // now turn the blueTile to another color
-        if(blueTile != null) {
-            blueTile.changeTileColor(blueTile.color);
+    public void tileSelection(Tile a) {
+        // if this tile is not empty
+        if(a.position != 3) {
+            //this means lastClicked will change to this
+            // but before this happens, we need to see if we need to change the previous tile from the color blue
+            if(lastClicked != null) {
+                lastClicked.changeTileColor(lastClicked.color);
+            }
+            // then we set lastClicked to the new Tile
+            lastClicked = a;        
         }
-        blueTile = lastClicked;
+        // turns clicked tiles blue, and the last clicked Tile turns back to normal color
+        // lastClicked.changeTileColor(rgbBlue);
+        // // now turn the blueTile to another color
+        // if(blueTile != null) {
+        //     // now if lastC
+        //     blueTile.changeTileColor(blueTile.color);
+        // }
+        // blueTile = lastClicked;
+        lastClicked.changeTileColor(rgbBlue);
     }
 
     //letter will represent the piece, capital means white, lowercase means black
@@ -143,5 +157,19 @@ public class Tile extends JPanel implements MouseListener{
 
     public void changeTileColor(int[] rgb) {
         this.setBackground(new Color(rgb[0], rgb[1], rgb[2]));
+    }
+
+    //static methods
+    public static void terminalDisplayBoard(char[][] info) {
+        for(int row = 0; row < 8; row++) {
+            for(int column = 0; column < 8; column++) {
+                char print = info[row][column];
+                if(print == '\u0000') {
+                    print = ' ';
+                }
+                System.out.print("|" + print);
+            }
+            System.out.println("|");
+        }
     }
 }
