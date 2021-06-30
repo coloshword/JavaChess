@@ -23,7 +23,7 @@ public class Tile extends JPanel implements MouseListener{
     // constructor
     // int x and y correspond to the coordinates, int a to the position
     // the 2d array to keep positions
-    char[][] boardInfo = new char[8][8];
+    static char[][] boardInfo = new char[8][8];
     static int delay = 1;
     boolean running = false;
     Timer timer;
@@ -31,6 +31,7 @@ public class Tile extends JPanel implements MouseListener{
     // the last clicked Tile
     static Tile lastClicked;
     static Tile destinationTile;
+    static Tile[][] listTiles = new Tile[8][8];
     // instance variables
     int[] color;
     // the horizontal board position (0-7)
@@ -69,6 +70,8 @@ public class Tile extends JPanel implements MouseListener{
                 System.out.println("Something went wrong");
             }
         }
+        listTiles[row][column] = this;
+        //startGame();
     }
     
     // corresponding mouse clicked events
@@ -82,7 +85,9 @@ public class Tile extends JPanel implements MouseListener{
         // destinationTile has to be a tile without a piece on it
         // if lastClicked is a Tile, and the next click is a Tile with a piece, then destinationTile will stay as null, and lastClicked will just switch
         tileSelection(this);
-        terminalDisplayBoard(boardInfo);
+        //terminalDisplayBoard(boardInfo);
+        System.out.println("--------------------------------");
+        //terminalDisplayPosition();
     }
 
     @Override
@@ -108,7 +113,7 @@ public class Tile extends JPanel implements MouseListener{
     public void startGame() {
         running = true;
         //timer = new Timer(delay, this);
-        //timer.start();
+        timer.start();
     }
 
     public void tileSelection(Tile a) {
@@ -121,14 +126,15 @@ public class Tile extends JPanel implements MouseListener{
             }
             // then we set lastClicked to the new Tile
             lastClicked = a;        
+            lastClicked.changeTileColor(rgbBlue);
         }
-        lastClicked.changeTileColor(rgbBlue);
         if(a.position == 3) {
             // this means the last clicked Tile was an empty Tile, meaning we move the Piece
             movePiece(a, lastClicked);
-            // now print the position to see if it is correct
-            terminalDisplayBoard(boardInfo);
+            destinationTile = null;
+            lastClicked = null;
         }
+        terminalDisplayBoard(boardInfo);
     }
 
     public void movePiece(Tile destTile, Tile startTile) {
@@ -145,8 +151,6 @@ public class Tile extends JPanel implements MouseListener{
         // now if successfully moved, both variables should be set to null
         // before that happens, the startTile color should be shifted back to its original color to indicate it is no longer selected
         startTile.changeTileColor(startTile.color);
-        destinationTile = null;
-        lastClicked = null;
     }
 
     //letter will represent the piece, capital means white, lowercase means black
@@ -190,6 +194,15 @@ public class Tile extends JPanel implements MouseListener{
                     print = ' ';
                 }
                 System.out.print("|" + print);
+            }
+            System.out.println("|");
+        }
+    }
+
+    public static void terminalDisplayPosition() {
+        for(int row = 0; row < 8; row++) {
+            for(int column = 0; column < 8; column++) {
+                System.out.print("|" + listTiles[row][column].position);
             }
             System.out.println("|");
         }
